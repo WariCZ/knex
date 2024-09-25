@@ -10,6 +10,7 @@ import tarn = require('tarn');
 import events = require('events');
 import stream = require('stream');
 import ResultTypes = require('./result');
+import Runner = require('../lib/execution/runner');
 
 import { Tables } from './tables';
 
@@ -395,6 +396,11 @@ interface Knex<TRecord extends {} = any, TResult = any[]>
   __knex__: string;
 
   raw: Knex.RawBuilder<TRecord>;
+
+  registerTriggers(props: {
+    before?: (runner: Runner) => any;
+    after?: (runner: Runner, beforeData: any) => void;
+  });
 
   transactionProvider(
     config?: Knex.TransactionConfig
@@ -3151,31 +3157,15 @@ declare namespace Knex {
     name?: string;
   }
 
-  // Note that the shape of the `migration` depends on the MigrationSource which may be custom.
-  type LifecycleHook = (
-    knexOrTrx: Knex | Transaction,
-    migrations: unknown[]
-  ) => Promise<any>;
-
-  interface MigratorConfigWithLifecycleHooks extends MigratorConfig {
-    beforeAll?: LifecycleHook;
-    beforeEach?: LifecycleHook;
-    afterEach?: LifecycleHook;
-    afterAll?: LifecycleHook;
-  }
-
   interface Migrator {
     make(name: string, config?: MigratorConfig): Promise<string>;
-    latest(config?: MigratorConfigWithLifecycleHooks): Promise<any>;
-    rollback(
-      config?: MigratorConfigWithLifecycleHooks,
-      all?: boolean
-    ): Promise<any>;
+    latest(config?: MigratorConfig): Promise<any>;
+    rollback(config?: MigratorConfig, all?: boolean): Promise<any>;
     status(config?: MigratorConfig): Promise<number>;
     currentVersion(config?: MigratorConfig): Promise<string>;
     list(config?: MigratorConfig): Promise<any>;
-    up(config?: MigratorConfigWithLifecycleHooks): Promise<any>;
-    down(config?: MigratorConfigWithLifecycleHooks): Promise<any>;
+    up(config?: MigratorConfig): Promise<any>;
+    down(config?: MigratorConfig): Promise<any>;
     forceFreeMigrationsLock(config?: MigratorConfig): Promise<any>;
   }
 
