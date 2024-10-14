@@ -2248,6 +2248,7 @@ declare namespace Knex {
 
     toSQL(): Sql;
 
+    addParams(params: Object): QueryBuilder<TRecord, TResult>;
     on(event: string, callback: Function): QueryBuilder<TRecord, TResult>;
 
     queryContext(context: any): QueryBuilder<TRecord, TResult>;
