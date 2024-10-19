@@ -399,7 +399,7 @@ interface Knex<TRecord extends {} = any, TResult = any[]>
 
   registerTriggers(props: {
     before?: (runner: Runner) => any;
-    after?: (runner: Runner, beforeData: any) => void;
+    after?: (runner: Runner, afterData: any, beforeData: any) => void;
   });
 
   transactionProvider(
@@ -2248,6 +2248,7 @@ declare namespace Knex {
 
     toSQL(): Sql;
 
+    setUser(user: Object): QueryBuilder<TRecord, TResult>;
     addParams(params: Object): QueryBuilder<TRecord, TResult>;
     on(event: string, callback: Function): QueryBuilder<TRecord, TResult>;
 
@@ -2293,6 +2294,8 @@ declare namespace Knex {
       post: string[];
     }>;
     toQuery(): string;
+    setUser(user: Object): this;
+    addParams(params: Object): this;
     options(options: Readonly<{ [key: string]: any }>): this;
     connection(connection: any): this;
     debug(enabled: boolean): this;
