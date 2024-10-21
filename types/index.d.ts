@@ -743,6 +743,8 @@ declare namespace Knex {
     orHavingNull: HavingNull<TRecord, TResult>;
     orHavingNotNull: HavingNull<TRecord, TResult>;
 
+    setUser(user: Object): QueryBuilder<TRecord, TResult>;
+
     // Clear
     clearSelect(): QueryBuilder<
       TRecord,
@@ -2248,8 +2250,6 @@ declare namespace Knex {
 
     toSQL(): Sql;
 
-    setUser(user: Object): QueryBuilder<TRecord, TResult>;
-    addParams(params: Object): QueryBuilder<TRecord, TResult>;
     on(event: string, callback: Function): QueryBuilder<TRecord, TResult>;
 
     queryContext(context: any): QueryBuilder<TRecord, TResult>;
